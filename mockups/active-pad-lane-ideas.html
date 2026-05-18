@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Active Pad Lane Ideas</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #05070c;
+        --panel: #0d121d;
+        --line: rgba(255, 255, 255, 0.13);
+        --text: #f5f8ff;
+        --muted: #94a0b6;
+        --hit: #f8fbff;
+        --p01: #ff375f;
+        --p02: #ff8f1f;
+        --p03: #ffd60a;
+        --p04: #7bd88f;
+        --p07: #2580ff;
+        --p12: #2dd4bf;
+        --p13: #4cc9f0;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #05070c;
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .sheet {
+        width: 1500px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        padding: 22px;
+        background:
+          radial-gradient(circle at 18% 0%, rgba(76, 201, 240, 0.11), transparent 36%),
+          radial-gradient(circle at 86% 2%, rgba(255, 55, 95, 0.10), transparent 34%),
+          var(--bg);
+      }
+
+      .concept {
+        position: relative;
+        min-height: 720px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: linear-gradient(180deg, rgba(13, 18, 29, 0.94), rgba(7, 10, 17, 0.97));
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      }
+
+      .title {
+        min-height: 112px;
+        padding: 20px 20px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0;
+      }
+
+      p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .badge {
+        position: absolute;
+        right: 18px;
+        top: 18px;
+        min-width: 70px;
+        padding: 7px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.86);
+        font-weight: 850;
+        text-align: center;
+      }
+
+      .stage {
+        position: absolute;
+        inset: 132px 18px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.48));
+      }
+
+      .lanes {
+        position: absolute;
+        inset: 24px 38px 118px;
+        display: grid;
+        gap: 9px;
+      }
+
+      .four .lanes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .seven .lanes { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+      .hybrid .lanes { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+
+      .lane {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.055);
+        border-radius: 6px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+      }
+
+      .lane::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 6px;
+        background: var(--color);
+        box-shadow: 0 0 16px var(--color);
+      }
+
+      .lane.ghost {
+        opacity: 0.18;
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .note {
+        position: absolute;
+        left: 17%;
+        width: 66%;
+        height: 22px;
+        border-radius: 5px;
+        background: var(--color);
+        box-shadow: 0 0 22px var(--color);
+      }
+
+      .note.top { top: 58px; }
+      .note.mid { top: 204px; }
+      .note.low { top: 344px; }
+
+      .hitline {
+        position: absolute;
+        left: 38px;
+        right: 38px;
+        bottom: 108px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--hit);
+        box-shadow: 0 0 24px rgba(255, 255, 255, 0.78);
+      }
+
+      .labels {
+        position: absolute;
+        left: 38px;
+        right: 38px;
+        bottom: 30px;
+        display: grid;
+        gap: 9px;
+      }
+
+      .four .labels { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .seven .labels { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+      .hybrid .labels { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+
+      .label {
+        min-height: 52px;
+        border: 1px solid color-mix(in srgb, var(--color), white 22%);
+        border-radius: 6px;
+        background: color-mix(in srgb, var(--color), transparent 78%);
+        color: white;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 900;
+        line-height: 1.15;
+      }
+
+      .label span {
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 10px;
+        font-weight: 800;
+      }
+
+      .label.ghost {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.025);
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      .mini-pad-map {
+        position: absolute;
+        left: 30px;
+        right: 30px;
+        bottom: 18px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 5px;
+        opacity: 0.56;
+      }
+
+      .mini {
+        min-height: 27px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 5px;
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 10px;
+        font-weight: 850;
+      }
+
+      .mini.on {
+        border-color: color-mix(in srgb, var(--color), white 28%);
+        background: color-mix(in srgb, var(--color), transparent 78%);
+        color: white;
+        opacity: 1;
+      }
+
+      .hybrid .hitline {
+        bottom: 150px;
+      }
+
+      .hybrid .lanes {
+        inset: 24px 38px 160px;
+      }
+
+      .hybrid .labels {
+        bottom: 86px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <section class="concept four">
+        <div class="title">
+          <h2>A. 曲で使うPADだけ</h2>
+          <p>Easy曲ならP01-P04のみ。視野が狭くても追いやすい。初級練習に一番やさしい。</p>
+          <div class="badge">最小</div>
+        </div>
+        <div class="stage">
+          <div class="lanes" data-pads="P01,P02,P03,P04"></div>
+          <div class="hitline"></div>
+          <div class="labels" data-pads="P01,P02,P03,P04"></div>
+        </div>
+      </section>
+
+      <section class="concept seven">
+        <div class="title">
+          <h2>B. この曲で使うPADだけ</h2>
+          <p>怪獣FullならKick/Snare/Hat/Open/Crash/Tom/Shakerなど、実際に出るものだけ。</p>
+          <div class="badge">推奨</div>
+        </div>
+        <div class="stage">
+          <div class="lanes" data-pads="P01,P02,P03,P04,P07,P12,P13"></div>
+          <div class="hitline"></div>
+          <div class="labels" data-pads="P01,P02,P03,P04,P07,P12,P13"></div>
+        </div>
+      </section>
+
+      <section class="concept hybrid">
+        <div class="title">
+          <h2>C. 使うPAD + 4x4位置ヒント</h2>
+          <p>レーンは使うPADだけ。下に薄い4x4地図を置いて、実機の場所も忘れない。</p>
+          <div class="badge">実機感</div>
+        </div>
+        <div class="stage">
+          <div class="lanes" data-pads="P01,P02,P03,P04,P07,P12,P13,P16"></div>
+          <div class="hitline"></div>
+          <div class="labels" data-pads="P01,P02,P03,P04,P07,P12,P13,P16"></div>
+          <div class="mini-pad-map"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const padData = {
+        P01: ["Kick", "--p01"], P02: ["Snare", "--p02"], P03: ["Hat", "--p03"], P04: ["Open", "--p04"],
+        P07: ["Tom", "--p07"], P12: ["Shake", "--p12"], P13: ["Crash", "--p13"], P16: ["Ghost", "#ffffff"],
+      };
+
+      const notePositions = {
+        P01: ["low"], P02: ["mid"], P03: ["top", "low"], P04: ["mid"],
+        P07: ["low"], P12: ["top"], P13: ["mid"], P16: ["mid"],
+      };
+
+      document.querySelectorAll("[data-pads]").forEach((target) => {
+        target.dataset.pads.split(",").forEach((id) => {
+          const [name, color] = padData[id];
+          const el = document.createElement(target.classList.contains("lanes") ? "div" : "div");
+          el.style.setProperty("--color", color.startsWith("--") ? `var(${color})` : color);
+          if (target.classList.contains("lanes")) {
+            el.className = "lane";
+            (notePositions[id] || []).forEach((position) => {
+              const note = document.createElement("div");
+              note.className = `note ${position}`;
+              el.appendChild(note);
+            });
+          } else {
+            el.className = "label";
+            el.innerHTML = `${id}<br><span>${name}</span>`;
+          }
+          target.appendChild(el);
+        });
+      });
+
+      const map = document.querySelector(".mini-pad-map");
+      if (map) {
+        const active = new Set(["P01", "P02", "P03", "P04", "P07", "P12", "P13", "P16"]);
+        ["P13", "P14", "P15", "P16", "P09", "P10", "P11", "P12", "P05", "P06", "P07", "P08", "P01", "P02", "P03", "P04"].forEach((id) => {
+          const mini = document.createElement("div");
+          const color = padData[id]?.[1] || "rgba(255,255,255,0.2)";
+          mini.className = active.has(id) ? "mini on" : "mini";
+          mini.style.setProperty("--color", color.startsWith("--") ? `var(${color})` : color);
+          mini.textContent = id;
+          map.appendChild(mini);
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Finger Drum Trainer</title>
+    <link rel="stylesheet" href="./styles.css?v=tempo-ui-1" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="stage-panel" aria-label="演奏画面">
+        <header class="topbar">
+          <div>
+            <h1>Finger Drum Trainer</h1>
+            <p id="midiStatus" hidden></p>
+          </div>
+          <div class="transport" aria-label="トランスポート">
+            <label class="tempo-select">
+              <span>BPM</span>
+              <select id="bpmSelect" aria-label="BPM"></select>
+            </label>
+            <button id="metronomeToggle" type="button" aria-pressed="false">Metro Off</button>
+            <button id="playToggle" type="button">Play</button>
+            <button id="resetSong" type="button">Reset</button>
+          </div>
+        </header>
+
+        <div class="meter-row">
+          <div>
+            <span>BPM</span>
+            <strong id="bpmReadout">92</strong>
+          </div>
+          <div>
+            <span>Score</span>
+            <strong id="scoreReadout">0</strong>
+          </div>
+          <div>
+            <span>Combo</span>
+            <strong id="comboReadout">0</strong>
+          </div>
+          <div>
+            <span>Judge</span>
+            <strong id="judgeReadout">Ready</strong>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="noteCanvas" width="1280" height="760" aria-label="ノーツ落下レーン"></canvas>
+        </div>
+      </section>
+
+      <aside class="pad-panel" aria-label="MIDI PAD">
+        <div class="panel-tabs" role="tablist" aria-label="パネル切り替え">
+          <button id="padTab" class="active" type="button" role="tab" aria-selected="true" aria-controls="padContent">PAD</button>
+          <button id="settingsTab" type="button" role="tab" aria-selected="false" aria-controls="settingsContent">設定</button>
+        </div>
+        <div id="padContent" class="tab-page active" role="tabpanel" aria-labelledby="padTab">
+          <div class="pad-header">
+            <div>
+              <h2>4x4 Pads</h2>
+              <p>左下P01から右へ、上段へ採番</p>
+            </div>
+            <button id="demoPattern" type="button">見本</button>
+          </div>
+          <div id="padGrid" class="pad-grid"></div>
+        </div>
+        <div id="settingsContent" class="tab-page" role="tabpanel" aria-labelledby="settingsTab">
+          <section class="settings-group">
+            <h2>MIDI</h2>
+            <p id="settingsMidiStatus">未接続</p>
+            <div class="settings-actions">
+              <button id="connectMidi" type="button">MIDI接続</button>
+              <button id="learnToggle" type="button">Learn</button>
+            </div>
+          </section>
+          <section class="settings-group">
+            <h2>曲</h2>
+            <label class="select-row">
+              <span>Song</span>
+              <select id="songSelect"></select>
+            </label>
+            <p id="songDescription">基本8ビート</p>
+          </section>
+          <section class="settings-group">
+            <h2>Tempo</h2>
+            <label class="range-row">
+              <span>BPM</span>
+              <input id="bpmSlider" type="range" min="50" max="180" value="92" />
+              <strong id="settingsBpmReadout">92</strong>
+            </label>
+          </section>
+          <section class="settings-group">
+            <h2>音量</h2>
+            <label class="range-row">
+              <span>伴奏</span>
+              <input id="melodyVolume" type="range" min="0" max="120" value="80" />
+              <strong id="melodyVolumeReadout">80</strong>
+            </label>
+            <label class="range-row">
+              <span>ドラム</span>
+              <input id="drumVolume" type="range" min="0" max="120" value="90" />
+              <strong id="drumVolumeReadout">90</strong>
+            </label>
+            <label class="range-row">
+              <span>Metro</span>
+              <input id="metroVolume" type="range" min="0" max="120" value="70" />
+              <strong id="metroVolumeReadout">70</strong>
+            </label>
+          </section>
+          <section class="settings-group">
+            <h2>Assign</h2>
+            <p id="assignStorageStatus">アサイン: 未保存</p>
+            <button id="resetAssign" type="button">アサインを初期化</button>
+            <div id="mapList" class="map-list"></div>
+          </section>
+        </div>
+      </aside>
+    </main>
+
+    <script src="./app.js?v=demo-timing-1"></script>
+  </body>
+</html>
