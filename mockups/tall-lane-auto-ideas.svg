@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="920" viewBox="0 0 1500 920">
+  <defs>
+    <style>
+      .bg { fill: #05070c; }
+      .panel { fill: #0b111c; stroke: rgba(255,255,255,.14); stroke-width: 1; }
+      .stage { fill: #070a11; stroke: rgba(255,255,255,.08); stroke-width: 1; }
+      .text { fill: #f5f8ff; font: 800 24px system-ui, -apple-system, Segoe UI, sans-serif; }
+      .sub { fill: #96a2b8; font: 500 14px system-ui, -apple-system, Segoe UI, sans-serif; }
+      .small { fill: rgba(255,255,255,.74); font: 800 11px system-ui, -apple-system, Segoe UI, sans-serif; }
+      .tiny { fill: rgba(255,255,255,.62); font: 700 9px system-ui, -apple-system, Segoe UI, sans-serif; }
+      .lane { fill: url(#laneGrad); stroke: rgba(255,255,255,.07); stroke-width: 1; }
+      .hitline { stroke: #fff; stroke-width: 6; stroke-linecap: round; filter: url(#whiteGlow); }
+      .guide { stroke: rgba(255,255,255,.055); stroke-width: 1; }
+      .badge { fill: rgba(255,255,255,.06); stroke: rgba(255,255,255,.18); stroke-width: 1; }
+      .mapOff { fill: rgba(255,255,255,.035); stroke: rgba(255,255,255,.12); stroke-width: 1; }
+    </style>
+    <linearGradient id="laneGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#151b28"/>
+      <stop offset=".45" stop-color="#0c111b"/>
+      <stop offset="1" stop-color="#070a11"/>
+    </linearGradient>
+    <filter id="whiteGlow" x="-60%" y="-400%" width="220%" height="900%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="pinkGlow" x="-120%" y="-160%" width="340%" height="420%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="noteGlow" x="-80%" y="-160%" width="260%" height="420%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect class="bg" width="1500" height="920"/>
+  <circle cx="230" cy="0" r="360" fill="#172538" opacity=".44"/>
+  <circle cx="1320" cy="20" r="300" fill="#38111d" opacity=".36"/>
+
+  <!-- Candidate A -->
+  <g transform="translate(22 22)">
+    <rect class="panel" x="0" y="0" width="462" height="876" rx="8"/>
+    <text class="text" x="22" y="42">A. 標準横画面を縦に伸ばす</text>
+    <text class="sub" x="22" y="68">今の構成を維持。上から落ちる距離を増やす。</text>
+    <rect class="badge" x="360" y="24" width="76" height="38" rx="7"/>
+    <text class="small" x="382" y="48">安全</text>
+    <rect class="stage" x="18" y="92" width="426" height="756" rx="8"/>
+    <g transform="translate(42 120)">
+      <g>
+        <rect class="lane" x="0" y="0" width="72" height="570" rx="6"/><rect x="10" y="10" width="52" height="5" rx="3" fill="#ff375f"/>
+        <rect class="lane" x="79" y="0" width="72" height="570" rx="6"/><rect x="89" y="10" width="52" height="5" rx="3" fill="#ff8f1f"/>
+        <rect class="lane" x="158" y="0" width="72" height="570" rx="6"/><rect x="168" y="10" width="52" height="5" rx="3" fill="#ffd60a"/>
+        <rect class="lane" x="237" y="0" width="72" height="570" rx="6"/><rect x="247" y="10" width="52" height="5" rx="3" fill="#7bd88f"/>
+        <rect class="lane" x="316" y="0" width="72" height="570" rx="6"/><rect x="326" y="10" width="52" height="5" rx="3" fill="#4cc9f0"/>
+        <path class="guide" d="M6 155H66M85 155H145M164 155H224M243 155H303M322 155H382M6 306H66M85 306H145M164 306H224M243 306H303M322 306H382M6 457H66M85 457H145M164 457H224M243 457H303M322 457H382"/>
+        <rect x="23" y="70" width="28" height="22" rx="5" fill="#ff375f" filter="url(#noteGlow)"/>
+        <rect x="101" y="230" width="28" height="22" rx="5" fill="#ff8f1f" filter="url(#noteGlow)"/>
+        <rect x="180" y="130" width="28" height="22" rx="5" fill="#ffd60a" filter="url(#noteGlow)"/>
+        <rect x="259" y="350" width="28" height="22" rx="5" fill="#7bd88f" filter="url(#noteGlow)"/>
+        <rect x="338" y="268" width="28" height="22" rx="5" fill="#4cc9f0" filter="url(#noteGlow)"/>
+      </g>
+      <line class="hitline" x1="8" y1="584" x2="380" y2="584"/>
+      <g transform="translate(0 604)">
+        <rect x="0" y="0" width="72" height="48" rx="6" fill="#35101c" stroke="#ff375f"/><text class="small" x="24" y="19">P01</text><text class="small" x="20" y="36">Kick</text>
+        <rect x="79" y="0" width="72" height="48" rx="6" fill="#35200f" stroke="#ff8f1f"/><text class="small" x="103" y="19">P02</text><text class="small" x="95" y="36">Snare</text>
+        <rect x="158" y="0" width="72" height="48" rx="6" fill="#39330a" stroke="#ffd60a"/><text class="small" x="182" y="19">P03</text><text class="small" x="181" y="36">Hat</text>
+        <rect x="237" y="0" width="72" height="48" rx="6" fill="#15361f" stroke="#7bd88f"/><text class="small" x="261" y="19">P04</text><text class="small" x="258" y="36">Open</text>
+        <rect x="316" y="0" width="72" height="48" rx="6" fill="#12303c" stroke="#4cc9f0"/><text class="small" x="340" y="19">P13</text><text class="small" x="334" y="36">Crash</text>
+      </g>
+      <text class="tiny" x="126" y="684">4x4位置ヒントは小さめ</text>
+    </g>
+  </g>
+
+  <!-- Candidate B -->
+  <g transform="translate(519 22)">
+    <rect class="panel" x="0" y="0" width="462" height="876" rx="8"/>
+    <text class="text" x="22" y="42">B. レーンを縦長・中央寄せ</text>
+    <text class="sub" x="22" y="68">視線を中央に集める。ノーツの出現距離が最長。</text>
+    <rect class="badge" x="360" y="24" width="76" height="38" rx="7"/>
+    <text class="small" x="382" y="48">推奨</text>
+    <rect class="stage" x="18" y="92" width="426" height="756" rx="8"/>
+    <g transform="translate(74 112)">
+      <rect x="-18" y="0" width="326" height="622" rx="10" fill="rgba(255,255,255,.018)" stroke="rgba(255,255,255,.08)"/>
+      <rect class="lane" x="0" y="0" width="48" height="618" rx="6"/><rect x="8" y="10" width="32" height="5" rx="3" fill="#ff375f"/>
+      <rect class="lane" x="57" y="0" width="48" height="618" rx="6"/><rect x="65" y="10" width="32" height="5" rx="3" fill="#ff8f1f"/>
+      <rect class="lane" x="114" y="0" width="48" height="618" rx="6"/><rect x="122" y="10" width="32" height="5" rx="3" fill="#ffd60a"/>
+      <rect class="lane" x="171" y="0" width="48" height="618" rx="6"/><rect x="179" y="10" width="32" height="5" rx="3" fill="#7bd88f"/>
+      <rect class="lane" x="228" y="0" width="48" height="618" rx="6"/><rect x="236" y="10" width="32" height="5" rx="3" fill="#4cc9f0"/>
+      <rect x="14" y="92" width="20" height="22" rx="5" fill="#ff375f" filter="url(#noteGlow)"/>
+      <rect x="71" y="270" width="20" height="22" rx="5" fill="#ff8f1f" filter="url(#noteGlow)"/>
+      <rect x="128" y="162" width="20" height="22" rx="5" fill="#ffd60a" filter="url(#noteGlow)"/>
+      <rect x="185" y="390" width="20" height="22" rx="5" fill="#7bd88f" filter="url(#noteGlow)"/>
+      <rect x="242" y="314" width="20" height="22" rx="5" fill="#4cc9f0" filter="url(#noteGlow)"/>
+      <line class="hitline" x1="0" y1="630" x2="276" y2="630"/>
+      <g transform="translate(0 650)">
+        <rect x="0" y="0" width="48" height="45" rx="6" fill="#35101c" stroke="#ff375f"/><text class="tiny" x="13" y="18">P01</text><text class="tiny" x="11" y="34">Kick</text>
+        <rect x="57" y="0" width="48" height="45" rx="6" fill="#35200f" stroke="#ff8f1f"/><text class="tiny" x="70" y="18">P02</text><text class="tiny" x="64" y="34">Snare</text>
+        <rect x="114" y="0" width="48" height="45" rx="6" fill="#39330a" stroke="#ffd60a"/><text class="tiny" x="127" y="18">P03</text><text class="tiny" x="130" y="34">Hat</text>
+        <rect x="171" y="0" width="48" height="45" rx="6" fill="#15361f" stroke="#7bd88f"/><text class="tiny" x="184" y="18">P04</text><text class="tiny" x="182" y="34">Open</text>
+        <rect x="228" y="0" width="48" height="45" rx="6" fill="#12303c" stroke="#4cc9f0"/><text class="tiny" x="241" y="18">P13</text><text class="tiny" x="236" y="34">Crash</text>
+      </g>
+      <circle cx="24" cy="704" r="13" fill="#ff375f" filter="url(#pinkGlow)"/><text class="tiny" x="16" y="708">P01</text>
+      <circle cx="82" cy="704" r="13" fill="#ff8f1f" opacity=".75"/><text class="tiny" x="74" y="708">P02</text>
+      <circle cx="140" cy="704" r="13" fill="#ffd60a" opacity=".75"/><text class="tiny" x="132" y="708">P03</text>
+      <circle cx="198" cy="704" r="13" fill="#7bd88f" opacity=".75"/><text class="tiny" x="190" y="708">P04</text>
+      <circle cx="256" cy="704" r="13" fill="#4cc9f0" opacity=".75"/><text class="tiny" x="248" y="708">P13</text>
+    </g>
+  </g>
+
+  <!-- Candidate C -->
+  <g transform="translate(1016 22)">
+    <rect class="panel" x="0" y="0" width="462" height="876" rx="8"/>
+    <text class="text" x="22" y="42">C. Auto演奏を見せる練習モード</text>
+    <text class="sub" x="22" y="68">自動演奏時、PADラベルと4x4地図が同時に光る。</text>
+    <rect class="badge" x="340" y="24" width="96" height="38" rx="7"/>
+    <text class="small" x="360" y="48">見本用</text>
+    <rect class="stage" x="18" y="92" width="426" height="756" rx="8"/>
+    <g transform="translate(54 124)">
+      <rect class="lane" x="0" y="0" width="58" height="540" rx="6"/><rect x="9" y="10" width="40" height="5" rx="3" fill="#ff375f"/>
+      <rect class="lane" x="68" y="0" width="58" height="540" rx="6"/><rect x="77" y="10" width="40" height="5" rx="3" fill="#ff8f1f"/>
+      <rect class="lane" x="136" y="0" width="58" height="540" rx="6"/><rect x="145" y="10" width="40" height="5" rx="3" fill="#ffd60a"/>
+      <rect class="lane" x="204" y="0" width="58" height="540" rx="6"/><rect x="213" y="10" width="40" height="5" rx="3" fill="#7bd88f"/>
+      <rect class="lane" x="272" y="0" width="58" height="540" rx="6"/><rect x="281" y="10" width="40" height="5" rx="3" fill="#4cc9f0"/>
+      <rect x="151" y="430" width="28" height="22" rx="5" fill="#ffd60a" filter="url(#noteGlow)"/>
+      <text class="small" x="134" y="408" fill="#ffd60a">AUTO HIT</text>
+      <line class="hitline" x1="0" y1="552" x2="330" y2="552"/>
+      <g transform="translate(0 572)">
+        <rect x="0" y="0" width="58" height="48" rx="6" fill="#35101c" stroke="#ff375f"/><text class="tiny" x="14" y="18">P01</text><text class="tiny" x="12" y="34">Kick</text>
+        <rect x="68" y="0" width="58" height="48" rx="6" fill="#35200f" stroke="#ff8f1f"/><text class="tiny" x="82" y="18">P02</text><text class="tiny" x="75" y="34">Snare</text>
+        <rect x="136" y="0" width="58" height="48" rx="6" fill="#514708" stroke="#ffd60a" filter="url(#noteGlow)"/><text class="tiny" x="150" y="18">P03</text><text class="tiny" x="150" y="34">Hat</text>
+        <rect x="204" y="0" width="58" height="48" rx="6" fill="#15361f" stroke="#7bd88f"/><text class="tiny" x="218" y="18">P04</text><text class="tiny" x="216" y="34">Open</text>
+        <rect x="272" y="0" width="58" height="48" rx="6" fill="#12303c" stroke="#4cc9f0"/><text class="tiny" x="286" y="18">P13</text><text class="tiny" x="280" y="34">Crash</text>
+      </g>
+      <g transform="translate(64 642)">
+        <rect class="mapOff" x="0" y="0" width="42" height="20" rx="4"/><rect class="mapOff" x="48" y="0" width="42" height="20" rx="4"/><rect class="mapOff" x="96" y="0" width="42" height="20" rx="4"/><rect class="mapOff" x="144" y="0" width="42" height="20" rx="4"/>
+        <rect class="mapOff" x="0" y="25" width="42" height="20" rx="4"/><rect class="mapOff" x="48" y="25" width="42" height="20" rx="4"/><rect class="mapOff" x="96" y="25" width="42" height="20" rx="4"/><rect class="mapOff" x="144" y="25" width="42" height="20" rx="4"/>
+        <rect class="mapOff" x="0" y="50" width="42" height="20" rx="4"/><rect class="mapOff" x="48" y="50" width="42" height="20" rx="4"/><rect class="mapOff" x="96" y="50" width="42" height="20" rx="4"/><rect class="mapOff" x="144" y="50" width="42" height="20" rx="4"/>
+        <rect x="0" y="75" width="42" height="20" rx="4" fill="#35101c" stroke="#ff375f"/><rect x="48" y="75" width="42" height="20" rx="4" fill="#35200f" stroke="#ff8f1f"/><rect x="96" y="75" width="42" height="20" rx="4" fill="#514708" stroke="#ffd60a" filter="url(#noteGlow)"/><rect x="144" y="75" width="42" height="20" rx="4" fill="#15361f" stroke="#7bd88f"/>
+        <text class="tiny" x="9" y="89">P01</text><text class="tiny" x="57" y="89">P02</text><text class="tiny" x="105" y="89">P03</text><text class="tiny" x="153" y="89">P04</text>
+      </g>
+    </g>
+  </g>
+</svg>

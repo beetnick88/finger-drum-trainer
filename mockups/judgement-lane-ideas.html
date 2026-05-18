@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Judgement Lane Ideas</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #060910;
+        --panel: #0d121d;
+        --line: rgba(255, 255, 255, 0.13);
+        --text: #f5f8ff;
+        --muted: #94a0b6;
+        --hit: #f8fbff;
+        --p01: #ff375f;
+        --p02: #ff8f1f;
+        --p03: #ffd60a;
+        --p04: #7bd88f;
+        --p05: #00c2a8;
+        --p06: #00e5ff;
+        --p07: #2580ff;
+        --p08: #8b5cf6;
+        --p09: #f15bb5;
+        --p10: #fb5607;
+        --p11: #c0ff00;
+        --p12: #2dd4bf;
+        --p13: #4cc9f0;
+        --p14: #4361ee;
+        --p15: #b5179e;
+        --p16: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #05070c;
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .sheet {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        padding: 22px;
+        width: 1500px;
+        background:
+          radial-gradient(circle at 16% 0%, rgba(76, 201, 240, 0.12), transparent 34%),
+          radial-gradient(circle at 86% 6%, rgba(255, 55, 95, 0.10), transparent 32%),
+          #05070c;
+      }
+
+      .concept {
+        position: relative;
+        min-height: 470px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: linear-gradient(180deg, rgba(13, 18, 29, 0.94), rgba(7, 10, 17, 0.96));
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      }
+
+      .title {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 18px 18px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0;
+      }
+
+      p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .badge {
+        align-self: start;
+        min-width: 74px;
+        padding: 7px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.84);
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .stage {
+        position: absolute;
+        inset: 84px 16px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.44));
+      }
+
+      .lanes {
+        position: absolute;
+        inset: 18px 18px 76px;
+        display: grid;
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .lane {
+        position: relative;
+        overflow: hidden;
+        border-radius: 5px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
+        border: 1px solid rgba(255, 255, 255, 0.045);
+      }
+
+      .lane::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 4px;
+        background: var(--color);
+        opacity: 0.9;
+      }
+
+      .note {
+        position: absolute;
+        left: 14%;
+        width: 72%;
+        height: 16px;
+        border-radius: 4px;
+        background: var(--color);
+        box-shadow: 0 0 18px var(--color);
+      }
+
+      .note.one { top: 42px; }
+      .note.two { top: 142px; }
+      .note.three { top: 228px; }
+
+      .hitline {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--hit);
+        box-shadow: 0 0 22px rgba(255, 255, 255, 0.75);
+      }
+
+      .labels {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 20px;
+        display: grid;
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .label {
+        min-height: 34px;
+        border: 1px solid color-mix(in srgb, var(--color), white 18%);
+        border-radius: 5px;
+        background: color-mix(in srgb, var(--color), transparent 82%);
+        color: white;
+        font-size: 10px;
+        font-weight: 850;
+        text-align: center;
+        display: grid;
+        place-items: center;
+      }
+
+      .deck {
+        position: absolute;
+        left: 92px;
+        right: 92px;
+        bottom: 17px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        opacity: 0.54;
+      }
+
+      .pad {
+        min-height: 36px;
+        border: 1px solid color-mix(in srgb, var(--color), white 22%);
+        border-radius: 6px;
+        background: color-mix(in srgb, var(--color), transparent 74%);
+        display: grid;
+        place-items: center;
+        color: white;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .rail {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 64px;
+        display: grid;
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .rail .label {
+        min-height: 24px;
+      }
+
+      .compact .lanes {
+        inset: 18px 48px 112px;
+      }
+
+      .compact .hitline {
+        left: 48px;
+        right: 48px;
+        bottom: 116px;
+      }
+
+      .compact .labels {
+        display: none;
+      }
+
+      .compact .deck {
+        left: 120px;
+        right: 120px;
+        bottom: 22px;
+        opacity: 0.72;
+      }
+
+      .railway .lanes {
+        inset: 18px 18px 128px;
+      }
+
+      .railway .hitline {
+        bottom: 113px;
+      }
+
+      .railway .labels {
+        display: none;
+      }
+
+      .railway .deck {
+        display: none;
+      }
+
+      .grouped .lanes {
+        gap: 7px;
+      }
+
+      .grouped .lane:nth-child(4n) {
+        margin-right: 7px;
+      }
+
+      .grouped .lane:nth-child(16) {
+        margin-right: 0;
+      }
+
+      .grouped .hitline {
+        bottom: 75px;
+      }
+
+      .focus .lanes {
+        inset: 20px 72px 92px;
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+      }
+
+      .focus .lane {
+        opacity: 0.64;
+      }
+
+      .focus .lane:nth-child(1),
+      .focus .lane:nth-child(2),
+      .focus .lane:nth-child(3),
+      .focus .lane:nth-child(4) {
+        opacity: 1;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+      }
+
+      .focus .hitline {
+        left: 72px;
+        right: 72px;
+        bottom: 92px;
+      }
+
+      .focus .labels {
+        left: 72px;
+        right: 72px;
+        bottom: 20px;
+      }
+
+      .callout {
+        position: absolute;
+        right: 22px;
+        top: 104px;
+        width: 170px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 7px;
+        background: rgba(5, 8, 14, 0.72);
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 12px;
+        font-weight: 750;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <section class="concept grouped">
+        <div class="title">
+          <div>
+            <h2>A. 16レーン + 1本判定線</h2>
+            <p>一番音ゲーらしい。全PADの位置を横幅で覚えやすい。</p>
+          </div>
+          <div class="badge">推奨</div>
+        </div>
+        <div class="stage">
+          <div class="lanes"></div>
+          <div class="hitline"></div>
+          <div class="labels"></div>
+        </div>
+      </section>
+
+      <section class="concept compact">
+        <div class="title">
+          <div>
+            <h2>B. 16レーン + 下に4x4 PAD</h2>
+            <p>今のPAD感を残す。子供が実機配置に戻りやすい。</p>
+          </div>
+          <div class="badge">実機寄り</div>
+        </div>
+        <div class="stage">
+          <div class="lanes"></div>
+          <div class="hitline"></div>
+          <div class="deck"></div>
+        </div>
+      </section>
+
+      <section class="concept railway">
+        <div class="title">
+          <div>
+            <h2>C. レーン + PADラベルレール</h2>
+            <p>判定線のすぐ下にPAD名。視線移動が少ない。</p>
+          </div>
+          <div class="badge">見やすい</div>
+        </div>
+        <div class="stage">
+          <div class="lanes"></div>
+          <div class="hitline"></div>
+          <div class="rail"></div>
+        </div>
+      </section>
+
+      <section class="concept focus">
+        <div class="title">
+          <div>
+            <h2>D. 主要4PAD強調 + 16レーン</h2>
+            <p>曲練習の入口向け。Kick/Snare/Hat/Cymbalを太く見せる。</p>
+          </div>
+          <div class="badge">初級</div>
+        </div>
+        <div class="stage">
+          <div class="lanes"></div>
+          <div class="hitline"></div>
+          <div class="labels"></div>
+          <div class="callout">Easy曲はP01-P04を明るく、他は薄く表示</div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const pads = [
+        ["P01", "Kick", "--p01"], ["P02", "Snare", "--p02"], ["P03", "Hat", "--p03"], ["P04", "Open", "--p04"],
+        ["P05", "Clap", "--p05"], ["P06", "Rim", "--p06"], ["P07", "TomL", "--p07"], ["P08", "TomH", "--p08"],
+        ["P09", "PercA", "--p09"], ["P10", "PercB", "--p10"], ["P11", "Cow", "--p11"], ["P12", "Shake", "--p12"],
+        ["P13", "Crash", "--p13"], ["P14", "Ride", "--p14"], ["P15", "FX", "--p15"], ["P16", "Ghost", "--p16"],
+      ];
+
+      const notes = {
+        0: ["three"],
+        1: ["two"],
+        2: ["one", "three"],
+        3: ["two"],
+        5: ["three"],
+        8: ["two"],
+        10: ["one"],
+        12: ["three"],
+        15: ["two"],
+      };
+
+      document.querySelectorAll(".concept").forEach((concept) => {
+        const lanes = concept.querySelector(".lanes");
+        const labels = concept.querySelector(".labels");
+        const rail = concept.querySelector(".rail");
+        const deck = concept.querySelector(".deck");
+
+        pads.forEach(([id, name, color], index) => {
+          const lane = document.createElement("div");
+          lane.className = "lane";
+          lane.style.setProperty("--color", `var(${color})`);
+          (notes[index] || []).forEach((className) => {
+            const note = document.createElement("div");
+            note.className = `note ${className}`;
+            lane.appendChild(note);
+          });
+          lanes.appendChild(lane);
+
+          const label = document.createElement("div");
+          label.className = "label";
+          label.style.setProperty("--color", `var(${color})`);
+          label.textContent = id;
+          labels?.appendChild(label.cloneNode(true));
+
+          const railLabel = label.cloneNode(true);
+          rail?.appendChild(railLabel);
+        });
+
+        if (deck) {
+          [...pads].reverse().forEach(([id, , color]) => {
+            const pad = document.createElement("div");
+            pad.className = "pad";
+            pad.style.setProperty("--color", `var(${color})`);
+            pad.textContent = id;
+            deck.appendChild(pad);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
