@@ -932,6 +932,8 @@ function ensureAudio() {
 
 function playTone(pad, source) {
   if (!state.audio) return;
+  if (playSyntheticPadTone(pad, source)) return;
+
   const buffer = state.sampleBuffers.get(pad.sample);
   if (buffer) {
     const player = state.audio.createBufferSource();
@@ -955,6 +957,67 @@ function playTone(pad, source) {
   osc.connect(gain).connect(state.audio.destination);
   osc.start(now);
   osc.stop(now + 0.13);
+}
+
+function playSyntheticPadTone(pad, source) {
+  if (!["P06", "P09", "P10"].includes(pad.id)) return false;
+
+  const now = state.audio.currentTime;
+  const isMidi = source === "midi";
+  const level = (isMidi ? 0.78 : 0.7) * state.drumVolume;
+
+  if (pad.id === "P06") {
+    playNoiseBurst(now, 0.035, 900, 0.6 * level);
+    playPitchDrop(now, 360, 240, 0.05, "square", 0.35 * level);
+    return true;
+  }
+
+  if (pad.id === "P09") {
+    playPitchDrop(now, 310, 250, 0.075, "triangle", 0.48 * level);
+    playNoiseBurst(now, 0.025, 1200, 0.12 * level);
+    return true;
+  }
+
+  playPitchDrop(now, 430, 360, 0.065, "triangle", 0.44 * level);
+  playNoiseBurst(now, 0.022, 1500, 0.1 * level);
+  return true;
+}
+
+function playPitchDrop(startAt, startFreq, endFreq, duration, type, volume) {
+  const osc = state.audio.createOscillator();
+  const gain = state.audio.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(startFreq, startAt);
+  osc.frequency.exponentialRampToValueAtTime(endFreq, startAt + duration);
+  gain.gain.setValueAtTime(0.0001, startAt);
+  gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, volume), startAt + 0.004);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+  osc.connect(gain).connect(state.audio.destination);
+  osc.start(startAt);
+  osc.stop(startAt + duration + 0.01);
+}
+
+function playNoiseBurst(startAt, duration, cutoff, volume) {
+  const sampleRate = state.audio.sampleRate;
+  const frameCount = Math.max(1, Math.floor(sampleRate * duration));
+  const buffer = state.audio.createBuffer(1, frameCount, sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < frameCount; i += 1) {
+    const fade = 1 - i / frameCount;
+    data[i] = (Math.random() * 2 - 1) * fade;
+  }
+
+  const source = state.audio.createBufferSource();
+  const filter = state.audio.createBiquadFilter();
+  const gain = state.audio.createGain();
+  filter.type = "bandpass";
+  filter.frequency.value = cutoff;
+  filter.Q.value = 8;
+  gain.gain.setValueAtTime(Math.max(0.0001, volume), startAt);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+  source.buffer = buffer;
+  source.connect(filter).connect(gain).connect(state.audio.destination);
+  source.start(startAt);
 }
 
 function resumeAudio() {
