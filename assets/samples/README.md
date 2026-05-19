@@ -13,14 +13,21 @@ Source files used:
 - `drum_cymbal_closed.flac`
 - `drum_cymbal_open.flac`
 - `perc_snap.flac`
-- `elec_tick.flac`
+- `custom_rimshot.wav`
 - `drum_tom_lo_hard.flac`
 - `drum_tom_hi_hard.flac`
-- `glitch_perc1.flac`
-- `glitch_perc2.flac`
+- `custom_perc_low.wav`
+- `custom_perc_high.wav`
 - `drum_cowbell.flac`
-- `elec_blip.flac`
+- `custom_shaker.wav`
 - `drum_cymbal_hard.flac`
 - `elec_cymbal.flac`
 - `perc_impact1.flac`
 - `drum_bass_soft.flac`
+
+Custom generated prototype sounds:
+
+- `custom_rimshot.wav`
+- `custom_perc_low.wav`
+- `custom_perc_high.wav`
+- `custom_shaker.wav`

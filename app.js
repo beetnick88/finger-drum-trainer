@@ -6,13 +6,13 @@ const pads = [
   ["P03", "Closed Hat", "#ffd60a", "3", 42, "drum_cymbal_closed.flac"],
   ["P04", "Open Hat", "#7bd88f", "4", 46, "drum_cymbal_open.flac"],
   ["P05", "Clap", "#00c2a8", "q", 39, "perc_snap.flac"],
-  ["P06", "Rim", "#00e5ff", "w", 37, "elec_tick.flac"],
+  ["P06", "Rim", "#00e5ff", "w", 37, "custom_rimshot.wav"],
   ["P07", "Low Tom", "#2580ff", "e", 45, "drum_tom_lo_hard.flac"],
   ["P08", "High Tom", "#8b5cf6", "r", 50, "drum_tom_hi_hard.flac"],
-  ["P09", "Perc A", "#f15bb5", "a", 48, "glitch_perc1.flac"],
-  ["P10", "Perc B", "#fb5607", "s", 47, "glitch_perc2.flac"],
+  ["P09", "Perc A", "#f15bb5", "a", 48, "custom_perc_low.wav"],
+  ["P10", "Perc B", "#fb5607", "s", 47, "custom_perc_high.wav"],
   ["P11", "Cowbell", "#c0ff00", "d", 56, "drum_cowbell.flac"],
-  ["P12", "Shaker", "#2dd4bf", "f", 70, "elec_blip.flac"],
+  ["P12", "Shaker", "#2dd4bf", "f", 70, "custom_shaker.wav"],
   ["P13", "Crash", "#4cc9f0", "z", 49, "drum_cymbal_hard.flac"],
   ["P14", "Ride", "#4361ee", "x", 51, "elec_cymbal.flac"],
   ["P15", "FX", "#b5179e", "c", 55, "perc_impact1.flac"],
@@ -932,7 +932,6 @@ function ensureAudio() {
 
 function playTone(pad, source) {
   if (!state.audio) return;
-  if (playSyntheticPadTone(pad, source)) return;
 
   const buffer = state.sampleBuffers.get(pad.sample);
   if (buffer) {
@@ -957,67 +956,6 @@ function playTone(pad, source) {
   osc.connect(gain).connect(state.audio.destination);
   osc.start(now);
   osc.stop(now + 0.13);
-}
-
-function playSyntheticPadTone(pad, source) {
-  if (!["P06", "P09", "P10"].includes(pad.id)) return false;
-
-  const now = state.audio.currentTime;
-  const isMidi = source === "midi";
-  const level = (isMidi ? 0.78 : 0.7) * state.drumVolume;
-
-  if (pad.id === "P06") {
-    playNoiseBurst(now, 0.035, 900, 0.6 * level);
-    playPitchDrop(now, 360, 240, 0.05, "square", 0.35 * level);
-    return true;
-  }
-
-  if (pad.id === "P09") {
-    playPitchDrop(now, 310, 250, 0.075, "triangle", 0.48 * level);
-    playNoiseBurst(now, 0.025, 1200, 0.12 * level);
-    return true;
-  }
-
-  playPitchDrop(now, 430, 360, 0.065, "triangle", 0.44 * level);
-  playNoiseBurst(now, 0.022, 1500, 0.1 * level);
-  return true;
-}
-
-function playPitchDrop(startAt, startFreq, endFreq, duration, type, volume) {
-  const osc = state.audio.createOscillator();
-  const gain = state.audio.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(startFreq, startAt);
-  osc.frequency.exponentialRampToValueAtTime(endFreq, startAt + duration);
-  gain.gain.setValueAtTime(0.0001, startAt);
-  gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, volume), startAt + 0.004);
-  gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
-  osc.connect(gain).connect(state.audio.destination);
-  osc.start(startAt);
-  osc.stop(startAt + duration + 0.01);
-}
-
-function playNoiseBurst(startAt, duration, cutoff, volume) {
-  const sampleRate = state.audio.sampleRate;
-  const frameCount = Math.max(1, Math.floor(sampleRate * duration));
-  const buffer = state.audio.createBuffer(1, frameCount, sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < frameCount; i += 1) {
-    const fade = 1 - i / frameCount;
-    data[i] = (Math.random() * 2 - 1) * fade;
-  }
-
-  const source = state.audio.createBufferSource();
-  const filter = state.audio.createBiquadFilter();
-  const gain = state.audio.createGain();
-  filter.type = "bandpass";
-  filter.frequency.value = cutoff;
-  filter.Q.value = 8;
-  gain.gain.setValueAtTime(Math.max(0.0001, volume), startAt);
-  gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
-  source.buffer = buffer;
-  source.connect(filter).connect(gain).connect(state.audio.destination);
-  source.start(startAt);
 }
 
 function resumeAudio() {
