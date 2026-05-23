@@ -902,7 +902,7 @@ function addJudgePopup(padIndex, label, tone) {
     label,
     tone,
     startedAt: performance.now(),
-    duration: 560,
+    duration: 760,
   });
 }
 
@@ -1632,28 +1632,43 @@ function drawNotes(songTime, layout) {
 function drawJudgePopups(layout) {
   const now = performance.now();
   state.judgePopups = state.judgePopups.filter((popup) => now - popup.startedAt < popup.duration);
+  const popup = state.judgePopups[state.judgePopups.length - 1];
+  if (!popup) return;
 
-  for (const popup of state.judgePopups) {
-    const pad = pads[popup.padIndex];
-    const rect = padRect(pad, layout);
-    const progress = (now - popup.startedAt) / popup.duration;
-    const alpha = 1 - progress;
-    const y = rect.y + rect.height * 0.42 - rect.height * 0.32 * progress;
-    const toneColor = popup.tone === "good" ? "#68e389" : popup.tone === "warn" ? "#ffd166" : popup.tone === "bad" ? "#ff5b7a" : "#ffffff";
+  const progress = (now - popup.startedAt) / popup.duration;
+  const alpha = Math.max(0, 1 - progress);
+  const toneColor = popup.tone === "good" ? "#68e389" : popup.tone === "warn" ? "#ffd166" : popup.tone === "bad" ? "#ff5b7a" : "#ffffff";
+  const fontSize = Math.max(26, Math.min(48, layout.width * 0.038));
+  const text = popup.label;
+  const centerX = layout.width / 2;
+  const y = layout.laneTop + Math.max(54, layout.height * 0.09) - 8 * progress;
+  ctx.font = `950 ${fontSize}px ui-sans-serif, system-ui`;
+  const measured = ctx.measureText(text);
+  const badgeWidth = Math.max(150, Math.min(layout.laneAreaWidth * 0.7, measured.width + fontSize * 2.2));
+  const badgeHeight = fontSize * 1.35;
+  const badgeX = centerX - badgeWidth / 2;
+  const badgeY = y - badgeHeight * 0.78;
 
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.textAlign = "center";
-    ctx.font = `900 ${Math.max(15, rect.height * 0.23)}px ui-sans-serif, system-ui`;
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = "rgba(0,0,0,0.72)";
-    ctx.strokeText(popup.label, rect.x + rect.width / 2, y);
-    ctx.fillStyle = toneColor;
-    ctx.shadowColor = toneColor;
-    ctx.shadowBlur = 16;
-    ctx.fillText(popup.label, rect.x + rect.width / 2, y);
-    ctx.restore();
-  }
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, alpha * 1.15);
+  ctx.fillStyle = "rgba(3, 6, 12, 0.74)";
+  ctx.strokeStyle = colorWithAlpha(toneColor, 0.75);
+  ctx.lineWidth = 1.5;
+  ctx.shadowColor = toneColor;
+  ctx.shadowBlur = 18 * alpha;
+  roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 9);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.textAlign = "center";
+  ctx.font = `950 ${fontSize}px ui-sans-serif, system-ui`;
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = "rgba(0,0,0,0.78)";
+  ctx.strokeText(text, centerX, y);
+  ctx.fillStyle = toneColor;
+  ctx.shadowBlur = 20 * alpha;
+  ctx.fillText(text, centerX, y);
+  ctx.restore();
 }
 
 function drawIntroCue(songTime, layout) {
