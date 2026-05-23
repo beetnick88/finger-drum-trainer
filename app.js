@@ -902,8 +902,12 @@ function addJudgePopup(padIndex, label, tone) {
     label,
     tone,
     startedAt: performance.now(),
-    duration: 760,
+    duration: isTimingJudgeLabel(label) ? 760 : 560,
   });
+}
+
+function isTimingJudgeLabel(label) {
+  return !["Hit", "AUTO"].includes(label);
 }
 
 function updateScore() {
@@ -1632,7 +1636,9 @@ function drawNotes(songTime, layout) {
 function drawJudgePopups(layout) {
   const now = performance.now();
   state.judgePopups = state.judgePopups.filter((popup) => now - popup.startedAt < popup.duration);
-  const popup = state.judgePopups[state.judgePopups.length - 1];
+  drawPadJudgePopups(layout, now);
+
+  const popup = [...state.judgePopups].reverse().find((item) => isTimingJudgeLabel(item.label));
   if (!popup) return;
 
   const progress = (now - popup.startedAt) / popup.duration;
@@ -1669,6 +1675,31 @@ function drawJudgePopups(layout) {
   ctx.shadowBlur = 20 * alpha;
   ctx.fillText(text, centerX, y);
   ctx.restore();
+}
+
+function drawPadJudgePopups(layout, now) {
+  for (const popup of state.judgePopups) {
+    if (isTimingJudgeLabel(popup.label)) continue;
+    const pad = pads[popup.padIndex];
+    const rect = padRect(pad, layout);
+    const progress = (now - popup.startedAt) / popup.duration;
+    const alpha = 1 - progress;
+    const y = rect.y + rect.height * 0.42 - rect.height * 0.32 * progress;
+    const toneColor = popup.tone === "good" ? "#68e389" : popup.tone === "warn" ? "#ffd166" : popup.tone === "bad" ? "#ff5b7a" : "#ffffff";
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.textAlign = "center";
+    ctx.font = `900 ${Math.max(15, rect.height * 0.23)}px ui-sans-serif, system-ui`;
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "rgba(0,0,0,0.72)";
+    ctx.strokeText(popup.label, rect.x + rect.width / 2, y);
+    ctx.fillStyle = toneColor;
+    ctx.shadowColor = toneColor;
+    ctx.shadowBlur = 16;
+    ctx.fillText(popup.label, rect.x + rect.width / 2, y);
+    ctx.restore();
+  }
 }
 
 function drawIntroCue(songTime, layout) {
