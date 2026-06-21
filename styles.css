@@ -42,6 +42,11 @@ button:hover {
   background: #1d283c;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
 button.active {
   border-color: #f5f7fb;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.16) inset;
@@ -186,6 +191,7 @@ span {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   background: #070a11;
+  touch-action: manipulation;
 }
 
 .pad-panel {
@@ -235,6 +241,9 @@ span {
     var(--panel-2);
   box-shadow: 0 0 1.6rem color-mix(in srgb, var(--pad-color), transparent 82%);
   text-align: left;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: transform 90ms ease, filter 90ms ease, box-shadow 90ms ease;
 }
 
@@ -277,6 +286,11 @@ span {
 
 .settings-group h2 {
   font-size: 0.95rem;
+}
+
+.midi-help {
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.45;
 }
 
 .settings-actions {

@@ -33,6 +33,8 @@ python3 -m http.server 4173
 
 Chrome系ブラウザで `MIDI接続` を押して許可してください。
 
+SafariとiPad/iPhone版ChromeはWeb MIDIに対応していません。iPadでは画面PADをタップして練習できます。実機MIDI PADを接続して使う場合は、Mac/WindowsのChromeまたはEdgeで開いてください。
+
 右パネルの `設定` タブから `Learn` を押します。その後、画面上のPADをクリックしてから実機MIDIPADを押すと、その画面PADにMIDI Note番号を保存します。
 
 保存された割り当てはブラウザのlocalStorageに残ります。

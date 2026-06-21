@@ -189,6 +189,8 @@ const state = {
   learnMode: false,
   selectedLearnPadIndex: null,
   midiAccess: null,
+  midiSupported: false,
+  isIOS: false,
   assignments: new Map(pads.map((pad) => [pad.note, pad.index])),
   sampleBuffers: new Map(),
   sampleLoadPromise: null,
@@ -212,6 +214,7 @@ const state = {
 function init() {
   loadAssignments();
   loadMixSettings();
+  setupMidiAvailability();
   renderSongOptions();
   applySongSettings();
   updateMixControls();
@@ -232,6 +235,7 @@ function init() {
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stopPlaybackForBackground();
   });
+  els.canvas.addEventListener("pointerdown", onCanvasPointerDown, { passive: false });
   els.connectMidi.addEventListener("click", connectMidi);
   els.learnToggle.addEventListener("click", toggleLearn);
   els.padTab.addEventListener("click", () => setPanelTab("pad"));
@@ -423,17 +427,26 @@ function renderPads() {
     button.style.setProperty("--pad-color", pad.color);
     button.dataset.pad = String(pad.index);
     button.innerHTML = `<strong>${pad.id}</strong><em>${pad.name}</em><small>Key ${pad.key.toUpperCase()}</small>`;
-    button.addEventListener("click", () => {
-      if (state.learnMode) {
-        selectLearnPad(pad.index);
-        return;
-      }
-      triggerPad(pad.index, performance.now(), "screen");
+    button.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      handleScreenPadPress(pad.index);
+    }, { passive: false });
+    button.addEventListener("click", (event) => {
+      if (event.detail > 0) return;
+      handleScreenPadPress(pad.index);
     });
     els.padGrid.appendChild(button);
   }
   renderMapList();
   updateLearnTarget();
+}
+
+function handleScreenPadPress(padIndex) {
+  if (state.learnMode) {
+    selectLearnPad(padIndex);
+    return;
+  }
+  triggerPad(padIndex, performance.now(), "screen");
 }
 
 function renderMapList() {
@@ -731,8 +744,8 @@ function autoPlayPad(padIndex, note) {
 }
 
 async function connectMidi() {
-  if (!navigator.requestMIDIAccess) {
-    setMidiStatus("このブラウザはWeb MIDI非対応");
+  if (!state.midiSupported) {
+    setUnsupportedMidiStatus();
     return;
   }
 
@@ -745,6 +758,29 @@ async function connectMidi() {
   }
 }
 
+function setupMidiAvailability() {
+  state.midiSupported = typeof navigator.requestMIDIAccess === "function";
+  state.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  if (state.midiSupported) {
+    setMidiStatus("未接続");
+    return;
+  }
+
+  els.connectMidi.disabled = true;
+  els.connectMidi.textContent = "MIDI非対応";
+  els.learnToggle.disabled = true;
+  setUnsupportedMidiStatus();
+}
+
+function setUnsupportedMidiStatus() {
+  const prefix = state.isIOS
+    ? "iPad/iPhoneのSafari・ChromeはWeb MIDI非対応です"
+    : "このブラウザはWeb MIDI非対応です";
+  setMidiStatus(`${prefix}。画面PADタップで練習できます。実機PADはMac/WindowsのChrome/Edgeで使ってください。`);
+}
+
 function bindMidiInputs() {
   if (!state.midiAccess) return;
   const inputs = Array.from(state.midiAccess.inputs.values());
@@ -755,6 +791,25 @@ function bindMidiInputs() {
 function setMidiStatus(message) {
   els.midiStatus.textContent = "";
   els.settingsMidiStatus.textContent = message;
+}
+
+function onCanvasPointerDown(event) {
+  event.preventDefault();
+  const rect = els.canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const layout = getStageLayout(rect.width, rect.height);
+  const activePad = layout.labelRects.find((item) => isPointInRect(x, y, item));
+  if (activePad) {
+    handleScreenPadPress(activePad.padIndex);
+    return;
+  }
+  const mapPad = pads.find((pad) => isPointInRect(x, y, padMapRect(pad, layout)));
+  if (mapPad) handleScreenPadPress(mapPad.index);
+}
+
+function isPointInRect(x, y, rect) {
+  return x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height;
 }
 
 function onMidiMessage(event) {
