@@ -1,35 +1,59 @@
 "use strict";
 
 const pads = [
-  ["P01", "Kick", "#ff375f", "1", 36, "bd_haus.flac"],
-  ["P02", "Snare", "#ff8f1f", "2", 38, "drum_snare_hard.flac"],
-  ["P03", "Closed Hat", "#ffd60a", "3", 42, "drum_cymbal_closed.flac"],
-  ["P04", "Open Hat", "#7bd88f", "4", 46, "drum_cymbal_open.flac"],
-  ["P05", "Clap", "#00c2a8", "q", 39, "perc_snap.flac"],
-  ["P06", "Rim", "#00e5ff", "w", 37, "custom_rimshot.wav"],
-  ["P07", "Low Tom", "#2580ff", "e", 45, "drum_tom_lo_hard.flac"],
-  ["P08", "High Tom", "#8b5cf6", "r", 50, "drum_tom_hi_hard.flac"],
-  ["P09", "Perc A", "#f15bb5", "a", 48, "custom_perc_low.wav"],
-  ["P10", "Perc B", "#fb5607", "s", 47, "custom_perc_high.wav"],
-  ["P11", "Cowbell", "#c0ff00", "d", 56, "drum_cowbell.flac"],
-  ["P12", "Shaker", "#2dd4bf", "f", 70, "custom_shaker.wav"],
-  ["P13", "Crash", "#4cc9f0", "z", 49, "drum_cymbal_hard.flac"],
-  ["P14", "Ride", "#4361ee", "x", 51, "elec_cymbal.flac"],
-  ["P15", "FX", "#b5179e", "c", 55, "perc_impact1.flac"],
-  ["P16", "Ghost", "#ffffff", "v", 40, "drum_bass_soft.flac"],
-].map(([id, name, color, key, note, sample], index) => ({
+  ["P01", "Kick", "#ff375f", "1", 36, "bd_haus.flac", 1, 0.95],
+  ["P02", "Side Stick", "#ff8f1f", "2", 37, "custom_rimshot.wav", 1, 0.78],
+  ["P03", "Snare", "#ffd60a", "3", 38, "drum_snare_hard.flac", 1, 0.92],
+  ["P04", "Clap", "#7bd88f", "4", 39, "perc_snap.flac", 1, 0.82],
+  ["P05", "Electric Snare", "#00c2a8", "q", 40, "drum_snare_hard.flac", 1.08, 0.72],
+  ["P06", "Low Floor Tom", "#00e5ff", "w", 41, "drum_tom_lo_hard.flac", 0.82, 0.92],
+  ["P07", "Closed Hat", "#2580ff", "e", 42, "drum_cymbal_closed.flac", 1, 0.72],
+  ["P08", "High Floor Tom", "#8b5cf6", "r", 43, "drum_tom_lo_hard.flac", 0.92, 0.9],
+  ["P09", "Pedal Hat", "#f15bb5", "a", 44, "drum_cymbal_closed.flac", 0.88, 0.52],
+  ["P10", "Low Tom", "#fb5607", "s", 45, "drum_tom_lo_hard.flac", 1.03, 0.9],
+  ["P11", "Open Hat", "#c0ff00", "d", 46, "drum_cymbal_open.flac", 1, 0.72],
+  ["P12", "Low-Mid Tom", "#2dd4bf", "f", 47, "drum_tom_lo_hard.flac", 1.16, 0.86],
+  ["P13", "High-Mid Tom", "#4cc9f0", "z", 48, "drum_tom_hi_hard.flac", 0.92, 0.84],
+  ["P14", "Crash", "#4361ee", "x", 49, "drum_cymbal_hard.flac", 1, 0.68],
+  ["P15", "High Tom", "#b5179e", "c", 50, "drum_tom_hi_hard.flac", 1.08, 0.82],
+  ["P16", "Ride", "#ffffff", "v", 51, "elec_cymbal.flac", 1, 0.62],
+].map(([id, name, color, key, note, sample, playbackRate, gain], index) => ({
   id,
   name,
   color,
   key,
   note,
   sample,
+  playbackRate,
+  gain,
   index,
   row: Math.floor(index / 4),
   col: index % 4,
 }));
 
 const padDisplayOrder = [...pads].sort((a, b) => b.row - a.row || a.col - b.col);
+const padLayoutVersion = "garageband-gm-36-51-v1";
+const garageBandPadByMidi = new Map([
+  [34, 2],
+  [36, 0],
+  [37, 1],
+  [38, 2],
+  [39, 3],
+  [40, 4],
+  [41, 5],
+  [42, 6],
+  [43, 7],
+  [44, 8],
+  [45, 9],
+  [46, 10],
+  [47, 11],
+  [48, 12],
+  [49, 13],
+  [50, 14],
+  [51, 15],
+  [54, 6],
+  [57, 13],
+]);
 
 const songs = [
   {
@@ -56,10 +80,10 @@ const songs = [
     cycles: 4,
     description: "右手ハットを一定にして、キックを入れる練習",
     steps: [
-      [0, 2], [2], [2], [2],
-      [0, 2], [2], [2], [2],
-      [0, 2], [2], [2], [2],
-      [0, 2], [2], [2], [2, 3],
+      [0, 6], [6], [6], [6],
+      [0, 6], [6], [6], [6],
+      [0, 6], [6], [6], [6],
+      [0, 6], [6], [6], [6, 10],
     ],
   },
   {
@@ -70,10 +94,10 @@ const songs = [
     cycles: 4,
     description: "2拍目/4拍目のスネアを覚える基本8ビート",
     steps: [
-      [0, 2], [2], [2], [2],
-      [1, 2], [2], [2], [2],
-      [0, 2], [2], [2], [2],
-      [1, 2], [2], [2], [2, 3],
+      [0, 6], [6], [6], [6],
+      [2, 6], [6], [6], [6],
+      [0, 6], [6], [6], [6],
+      [2, 6], [6], [6], [6, 10],
     ],
   },
   {
@@ -84,10 +108,10 @@ const songs = [
     cycles: 4,
     description: "キックを少し増やして、怪獣の花唄に近い足の動きへ",
     steps: [
-      [0, 2], [2], [2], [0, 2],
-      [1, 2], [2], [0, 2], [2],
-      [0, 2], [2], [2], [2],
-      [1, 2], [2], [0, 2], [2, 3],
+      [0, 6], [6], [6], [0, 6],
+      [2, 6], [6], [0, 6], [6],
+      [0, 6], [6], [6], [6],
+      [2, 6], [6], [0, 6], [6, 10],
     ],
   },
   {
@@ -98,10 +122,10 @@ const songs = [
     cycles: 4,
     description: "小節頭にCrashを入れて、そのまま8ビートへ戻る練習",
     steps: [
-      [0, 2, 12], [2], [2], [2],
-      [1, 2], [2], [0, 2], [2],
-      [0, 2], [2], [2], [2],
-      [1, 2], [2], [0, 2], [2],
+      [0, 6, 13], [6], [6], [6],
+      [2, 6], [6], [0, 6], [6],
+      [0, 6], [6], [6], [6],
+      [2, 6], [6], [0, 6], [6],
     ],
   },
   {
@@ -112,10 +136,10 @@ const songs = [
     cycles: 4,
     description: "最後にTomを入れて、次の小節へ戻るフィル練習",
     steps: [
-      [0, 2], [2], [2], [2],
-      [1, 2], [2], [0, 2], [2],
-      [0, 2], [2], [2], [2],
-      [1, 2], [2], [6], [7, 12],
+      [0, 6], [6], [6], [6],
+      [2, 6], [6], [0, 6], [6],
+      [0, 6], [6], [6], [6],
+      [2, 6], [6], [9], [14, 13],
     ],
   },
 ];
@@ -285,7 +309,10 @@ async function loadMidiSongs() {
     }
 
     const data = await cache.get(song.sourceJson);
-    const drumEvents = data.practice?.[song.practiceKey] || [];
+    const drumEvents = (data.practice?.[song.practiceKey] || []).map((event) => ({
+      ...event,
+      padIndex: garageBandPadByMidi.get(event.midi) ?? event.padIndex,
+    }));
     song.loaded = true;
     song.bpm = data.bpm || song.bpm;
     song.durationBeats = data.durationBeats || 0;
@@ -997,8 +1024,8 @@ function playTone(pad, source) {
     const player = state.audio.createBufferSource();
     const gain = state.audio.createGain();
     player.buffer = buffer;
-    player.playbackRate.value = source === "midi" ? 1 : 0.995;
-    gain.gain.value = (pad.index >= 12 ? 0.52 : 0.72) * state.drumVolume;
+    player.playbackRate.value = pad.playbackRate * (source === "midi" ? 1 : 0.995);
+    gain.gain.value = 0.72 * pad.gain * state.drumVolume;
     player.connect(gain).connect(state.audio.destination);
     player.start();
     return;
@@ -1851,8 +1878,17 @@ function roundRect(x, y, width, height, radius) {
 
 function loadAssignments() {
   try {
+    if (localStorage.getItem("finger-drum-midi-map-layout") !== padLayoutVersion) {
+      applyDefaultAssignments();
+      localStorage.removeItem("finger-drum-midi-map");
+      localStorage.removeItem("finger-drum-midi-map-saved-at");
+      localStorage.setItem("finger-drum-midi-map-layout", padLayoutVersion);
+      updateAssignStorageStatus(false);
+      return;
+    }
     const saved = JSON.parse(localStorage.getItem("finger-drum-midi-map") || "null");
     if (!Array.isArray(saved)) {
+      applyDefaultAssignments();
       updateAssignStorageStatus(false);
       return;
     }
@@ -1875,21 +1911,27 @@ function loadAssignments() {
 function saveAssignments() {
   localStorage.setItem("finger-drum-midi-map", JSON.stringify(pads.map((pad) => pad.note)));
   localStorage.setItem("finger-drum-midi-map-saved-at", new Date().toISOString());
+  localStorage.setItem("finger-drum-midi-map-layout", padLayoutVersion);
   updateAssignStorageStatus(true);
 }
 
 function resetAssignments() {
-  state.assignments.clear();
-  pads.forEach((pad, index) => {
-    const defaultNote = [36, 38, 42, 46, 39, 37, 45, 50, 48, 47, 56, 70, 49, 51, 55, 40][index];
-    pad.note = defaultNote;
-    state.assignments.set(defaultNote, index);
-  });
+  applyDefaultAssignments();
   localStorage.removeItem("finger-drum-midi-map");
   localStorage.removeItem("finger-drum-midi-map-saved-at");
+  localStorage.setItem("finger-drum-midi-map-layout", padLayoutVersion);
   renderPads();
   updateAssignStorageStatus(false);
   setJudge("アサイン初期化", "neutral");
+}
+
+function applyDefaultAssignments() {
+  state.assignments.clear();
+  pads.forEach((pad, index) => {
+    const defaultNote = 36 + index;
+    pad.note = defaultNote;
+    state.assignments.set(defaultNote, index);
+  });
 }
 
 function updateAssignStorageStatus(hasSavedMap) {
