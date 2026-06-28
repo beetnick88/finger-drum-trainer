@@ -19,6 +19,7 @@ const soundPresets = [
   { id: "crash", label: "クラッシュ", sample: "drum_cymbal_hard.flac", playbackRate: 1, gain: 0.68 },
   { id: "strong-crash", label: "強いクラッシュ", sample: "drum_cymbal_hard.flac", playbackRate: 0.92, gain: 1.16 },
   { id: "bright-crash", label: "明るいクラッシュ", sample: "drum_cymbal_hard.flac", playbackRate: 1.12, gain: 0.9 },
+  { id: "added-crash", label: "追加クラッシュ", sample: "cymbal_crash_412547.mp3", playbackRate: 1, gain: 0.9 },
   { id: "ride", label: "ライド", sample: "elec_cymbal.flac", playbackRate: 1, gain: 0.62 },
   { id: "cowbell", label: "カウベル", sample: "drum_cowbell.flac", playbackRate: 1, gain: 0.76 },
   { id: "shaker", label: "シェイカー", sample: "custom_shaker.wav", playbackRate: 1, gain: 0.72 },
