@@ -20,6 +20,7 @@ Melodics風の4x4 MIDI PAD練習アプリのMVPです。
 - 設定タブから曲を選択可能
 - 最後のノーツが流れ終わると自動でComplete表示になりゲーム終了
 - GarageBand SoCalと同じMIDI 36〜51の順でP01〜P16を配置
+- 設定タブからPADごとに音色を選択、試聴、保存、初期化
 
 ## 起動
 
@@ -45,6 +46,8 @@ SafariとiPad/iPhone版ChromeはWeb MIDIに対応していません。iPadでは
 P01から順に、Kick、Side Stick、Snare、Clap、Electric Snare、Low Floor Tom、Closed Hat、High Floor Tom、Pedal Hat、Low Tom、Open Hat、Low-Mid Tom、High-Mid Tom、Crash、High Tom、Rideを割り当てています。
 
 実機PADのMIDIノートはP01=36からP16=51までの連番です。旧配置の保存データは初回起動時にGarageBand配置へ移行されます。
+
+設定タブの「PAD音色」では、GarageBand配置を変えずにPADごとの音だけを変更できます。強いクラッシュ、明るいクラッシュ、カウベル、シェイカー、パーカッション、電子音などを選択できます。選んだ音色はlocalStorageに保存されます。
 
 ## 音源
 
