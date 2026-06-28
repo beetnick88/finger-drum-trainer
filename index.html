@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Finger Drum Trainer</title>
-    <link rel="stylesheet" href="./styles.css?v=garageband-layout-1" />
+    <link rel="stylesheet" href="./styles.css?v=pad-sound-settings-1" />
   </head>
   <body>
     <main class="app-shell">
@@ -109,6 +109,22 @@
             </label>
           </section>
           <section class="settings-group">
+            <h2>PAD音色</h2>
+            <label class="select-row">
+              <span>PAD</span>
+              <select id="soundPadSelect" aria-label="音色を変更するPAD"></select>
+            </label>
+            <label class="select-row">
+              <span>音色</span>
+              <select id="soundPresetSelect" aria-label="PAD音色"></select>
+            </label>
+            <div class="settings-actions">
+              <button id="previewSound" type="button">試聴</button>
+              <button id="resetSounds" type="button">音色を初期化</button>
+            </div>
+            <p id="soundStorageStatus">音色: GarageBand配置</p>
+          </section>
+          <section class="settings-group">
             <h2>Assign</h2>
             <p id="assignStorageStatus">アサイン: 未保存</p>
             <button id="resetAssign" type="button">アサインを初期化</button>
@@ -118,6 +134,6 @@
       </aside>
     </main>
 
-    <script src="./app.js?v=garageband-layout-1"></script>
+    <script src="./app.js?v=pad-sound-settings-1"></script>
   </body>
 </html>

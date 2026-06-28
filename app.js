@@ -1,35 +1,72 @@
 "use strict";
 
+const soundPresets = [
+  { id: "kick", label: "キック", sample: "bd_haus.flac", playbackRate: 1, gain: 0.95 },
+  { id: "soft-kick", label: "ソフトキック", sample: "drum_bass_soft.flac", playbackRate: 1, gain: 0.82 },
+  { id: "side-stick", label: "サイドスティック", sample: "custom_rimshot.wav", playbackRate: 1, gain: 0.78 },
+  { id: "snare", label: "スネア", sample: "drum_snare_hard.flac", playbackRate: 1, gain: 0.92 },
+  { id: "electric-snare", label: "エレクトリックスネア", sample: "drum_snare_hard.flac", playbackRate: 1.08, gain: 0.72 },
+  { id: "clap", label: "クラップ", sample: "perc_snap.flac", playbackRate: 1, gain: 0.82 },
+  { id: "low-floor-tom", label: "ローフロアタム", sample: "drum_tom_lo_hard.flac", playbackRate: 0.82, gain: 0.92 },
+  { id: "high-floor-tom", label: "ハイフロアタム", sample: "drum_tom_lo_hard.flac", playbackRate: 0.92, gain: 0.9 },
+  { id: "low-tom", label: "ロータム", sample: "drum_tom_lo_hard.flac", playbackRate: 1.03, gain: 0.9 },
+  { id: "low-mid-tom", label: "ローミッドタム", sample: "drum_tom_lo_hard.flac", playbackRate: 1.16, gain: 0.86 },
+  { id: "high-mid-tom", label: "ハイミッドタム", sample: "drum_tom_hi_hard.flac", playbackRate: 0.92, gain: 0.84 },
+  { id: "high-tom", label: "ハイタム", sample: "drum_tom_hi_hard.flac", playbackRate: 1.08, gain: 0.82 },
+  { id: "closed-hat", label: "クローズドハイハット", sample: "drum_cymbal_closed.flac", playbackRate: 1, gain: 0.72 },
+  { id: "pedal-hat", label: "ペダルハイハット", sample: "drum_cymbal_closed.flac", playbackRate: 0.88, gain: 0.52 },
+  { id: "open-hat", label: "オープンハイハット", sample: "drum_cymbal_open.flac", playbackRate: 1, gain: 0.72 },
+  { id: "crash", label: "クラッシュ", sample: "drum_cymbal_hard.flac", playbackRate: 1, gain: 0.68 },
+  { id: "strong-crash", label: "強いクラッシュ", sample: "drum_cymbal_hard.flac", playbackRate: 0.92, gain: 1.16 },
+  { id: "bright-crash", label: "明るいクラッシュ", sample: "drum_cymbal_hard.flac", playbackRate: 1.12, gain: 0.9 },
+  { id: "ride", label: "ライド", sample: "elec_cymbal.flac", playbackRate: 1, gain: 0.62 },
+  { id: "cowbell", label: "カウベル", sample: "drum_cowbell.flac", playbackRate: 1, gain: 0.76 },
+  { id: "shaker", label: "シェイカー", sample: "custom_shaker.wav", playbackRate: 1, gain: 0.72 },
+  { id: "percussion-a", label: "パーカッションA", sample: "custom_perc_low.wav", playbackRate: 1, gain: 0.78 },
+  { id: "percussion-b", label: "パーカッションB", sample: "custom_perc_high.wav", playbackRate: 1, gain: 0.78 },
+  { id: "fx-impact", label: "FXインパクト", sample: "perc_impact1.flac", playbackRate: 1, gain: 0.76 },
+  { id: "electronic-click", label: "電子クリック", sample: "elec_tick.flac", playbackRate: 1, gain: 0.68 },
+  { id: "electronic-blip", label: "電子ブリップ", sample: "elec_blip.flac", playbackRate: 1, gain: 0.68 },
+  { id: "glitch-a", label: "グリッチA", sample: "glitch_perc1.flac", playbackRate: 1, gain: 0.72 },
+  { id: "glitch-b", label: "グリッチB", sample: "glitch_perc2.flac", playbackRate: 1, gain: 0.72 },
+];
+const soundPresetById = new Map(soundPresets.map((preset) => [preset.id, preset]));
+
 const pads = [
-  ["P01", "Kick", "#ff375f", "1", 36, "bd_haus.flac", 1, 0.95],
-  ["P02", "Side Stick", "#ff8f1f", "2", 37, "custom_rimshot.wav", 1, 0.78],
-  ["P03", "Snare", "#ffd60a", "3", 38, "drum_snare_hard.flac", 1, 0.92],
-  ["P04", "Clap", "#7bd88f", "4", 39, "perc_snap.flac", 1, 0.82],
-  ["P05", "Electric Snare", "#00c2a8", "q", 40, "drum_snare_hard.flac", 1.08, 0.72],
-  ["P06", "Low Floor Tom", "#00e5ff", "w", 41, "drum_tom_lo_hard.flac", 0.82, 0.92],
-  ["P07", "Closed Hat", "#2580ff", "e", 42, "drum_cymbal_closed.flac", 1, 0.72],
-  ["P08", "High Floor Tom", "#8b5cf6", "r", 43, "drum_tom_lo_hard.flac", 0.92, 0.9],
-  ["P09", "Pedal Hat", "#f15bb5", "a", 44, "drum_cymbal_closed.flac", 0.88, 0.52],
-  ["P10", "Low Tom", "#fb5607", "s", 45, "drum_tom_lo_hard.flac", 1.03, 0.9],
-  ["P11", "Open Hat", "#c0ff00", "d", 46, "drum_cymbal_open.flac", 1, 0.72],
-  ["P12", "Low-Mid Tom", "#2dd4bf", "f", 47, "drum_tom_lo_hard.flac", 1.16, 0.86],
-  ["P13", "High-Mid Tom", "#4cc9f0", "z", 48, "drum_tom_hi_hard.flac", 0.92, 0.84],
-  ["P14", "Crash", "#4361ee", "x", 49, "drum_cymbal_hard.flac", 1, 0.68],
-  ["P15", "High Tom", "#b5179e", "c", 50, "drum_tom_hi_hard.flac", 1.08, 0.82],
-  ["P16", "Ride", "#ffffff", "v", 51, "elec_cymbal.flac", 1, 0.62],
-].map(([id, name, color, key, note, sample, playbackRate, gain], index) => ({
-  id,
-  name,
-  color,
-  key,
-  note,
-  sample,
-  playbackRate,
-  gain,
-  index,
-  row: Math.floor(index / 4),
-  col: index % 4,
-}));
+  ["P01", "Kick", "#ff375f", "1", 36, "kick"],
+  ["P02", "Side Stick", "#ff8f1f", "2", 37, "side-stick"],
+  ["P03", "Snare", "#ffd60a", "3", 38, "snare"],
+  ["P04", "Clap", "#7bd88f", "4", 39, "clap"],
+  ["P05", "Electric Snare", "#00c2a8", "q", 40, "electric-snare"],
+  ["P06", "Low Floor Tom", "#00e5ff", "w", 41, "low-floor-tom"],
+  ["P07", "Closed Hat", "#2580ff", "e", 42, "closed-hat"],
+  ["P08", "High Floor Tom", "#8b5cf6", "r", 43, "high-floor-tom"],
+  ["P09", "Pedal Hat", "#f15bb5", "a", 44, "pedal-hat"],
+  ["P10", "Low Tom", "#fb5607", "s", 45, "low-tom"],
+  ["P11", "Open Hat", "#c0ff00", "d", 46, "open-hat"],
+  ["P12", "Low-Mid Tom", "#2dd4bf", "f", 47, "low-mid-tom"],
+  ["P13", "High-Mid Tom", "#4cc9f0", "z", 48, "high-mid-tom"],
+  ["P14", "Crash", "#4361ee", "x", 49, "crash"],
+  ["P15", "High Tom", "#b5179e", "c", 50, "high-tom"],
+  ["P16", "Ride", "#ffffff", "v", 51, "ride"],
+].map(([id, name, color, key, note, defaultSoundId], index) => {
+  const sound = soundPresetById.get(defaultSoundId);
+  return {
+    id,
+    name,
+    color,
+    key,
+    note,
+    defaultSoundId,
+    soundId: defaultSoundId,
+    sample: sound.sample,
+    playbackRate: sound.playbackRate,
+    gain: sound.gain,
+    index,
+    row: Math.floor(index / 4),
+    col: index % 4,
+  };
+});
 
 const padDisplayOrder = [...pads].sort((a, b) => b.row - a.row || a.col - b.col);
 const padLayoutVersion = "garageband-gm-36-51-v1";
@@ -186,6 +223,11 @@ const els = {
   drumVolumeReadout: document.getElementById("drumVolumeReadout"),
   metroVolume: document.getElementById("metroVolume"),
   metroVolumeReadout: document.getElementById("metroVolumeReadout"),
+  soundPadSelect: document.getElementById("soundPadSelect"),
+  soundPresetSelect: document.getElementById("soundPresetSelect"),
+  previewSound: document.getElementById("previewSound"),
+  resetSounds: document.getElementById("resetSounds"),
+  soundStorageStatus: document.getElementById("soundStorageStatus"),
   scoreReadout: document.getElementById("scoreReadout"),
   comboReadout: document.getElementById("comboReadout"),
   judgeReadout: document.getElementById("judgeReadout"),
@@ -237,9 +279,11 @@ const state = {
 
 function init() {
   loadAssignments();
+  loadSoundAssignments();
   loadMixSettings();
   setupMidiAvailability();
   renderSongOptions();
+  renderSoundSettings();
   applySongSettings();
   updateMixControls();
   loadMidiSongs().then(() => {
@@ -279,6 +323,10 @@ function init() {
   els.melodyVolume.addEventListener("input", () => setMixVolume("melody", Number(els.melodyVolume.value)));
   els.drumVolume.addEventListener("input", () => setMixVolume("drum", Number(els.drumVolume.value)));
   els.metroVolume.addEventListener("input", () => setMixVolume("metro", Number(els.metroVolume.value)));
+  els.soundPadSelect.addEventListener("change", syncSoundPresetControl);
+  els.soundPresetSelect.addEventListener("change", updateSelectedPadSound);
+  els.previewSound.addEventListener("click", previewSelectedPadSound);
+  els.resetSounds.addEventListener("click", resetSoundAssignments);
 }
 
 function currentSong() {
@@ -490,6 +538,60 @@ function renderMapList() {
     });
     els.mapList.appendChild(item);
   }
+}
+
+function renderSoundSettings() {
+  els.soundPadSelect.innerHTML = "";
+  for (const pad of pads) {
+    const option = document.createElement("option");
+    option.value = String(pad.index);
+    option.textContent = `${pad.id} ${pad.name}`;
+    els.soundPadSelect.appendChild(option);
+  }
+
+  els.soundPresetSelect.innerHTML = "";
+  for (const preset of soundPresets) {
+    const option = document.createElement("option");
+    option.value = preset.id;
+    option.textContent = preset.label;
+    els.soundPresetSelect.appendChild(option);
+  }
+  syncSoundPresetControl();
+}
+
+function syncSoundPresetControl() {
+  const pad = pads[Number(els.soundPadSelect.value)];
+  if (!pad) return;
+  els.soundPresetSelect.value = pad.soundId;
+}
+
+function updateSelectedPadSound() {
+  const pad = pads[Number(els.soundPadSelect.value)];
+  if (!pad || !applySoundPreset(pad, els.soundPresetSelect.value)) return;
+  saveSoundAssignments();
+  setJudge(`${pad.id}: ${soundPresetById.get(pad.soundId).label}`, "good");
+  previewSelectedPadSound();
+}
+
+async function previewSelectedPadSound() {
+  const pad = pads[Number(els.soundPadSelect.value)];
+  if (!pad) return;
+  ensureAudio();
+  await resumeAudio();
+  await loadSamples();
+  flashPad(pad.index);
+  addHitEffect(pad.index, 1);
+  playTone(pad, "preview");
+}
+
+function applySoundPreset(pad, soundId) {
+  const preset = soundPresetById.get(soundId);
+  if (!pad || !preset) return false;
+  pad.soundId = preset.id;
+  pad.sample = preset.sample;
+  pad.playbackRate = preset.playbackRate;
+  pad.gain = preset.gain;
+  return true;
 }
 
 function formatMidiNote(note) {
@@ -1046,8 +1148,9 @@ function playTone(pad, source) {
 
 function resumeAudio() {
   if (state.audio && state.audio.state === "suspended") {
-    state.audio.resume();
+    return state.audio.resume();
   }
+  return Promise.resolve();
 }
 
 function playCountBlip(step) {
@@ -1082,12 +1185,14 @@ function playMetronomeClick(strong) {
 
 function loadSamples() {
   if (state.sampleLoadPromise || !state.audio) return state.sampleLoadPromise;
+  const samples = [...new Set(soundPresets.map((preset) => preset.sample))];
   state.sampleLoadPromise = Promise.all(
-    pads.map(async (pad) => {
-      const response = await fetch(`./assets/samples/${pad.sample}`);
+    samples.map(async (sample) => {
+      const response = await fetch(`./assets/samples/${sample}`);
+      if (!response.ok) throw new Error(`Failed to load ${sample}`);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await state.audio.decodeAudioData(arrayBuffer);
-      state.sampleBuffers.set(pad.sample, audioBuffer);
+      state.sampleBuffers.set(sample, audioBuffer);
     }),
   ).catch(() => {
     setJudge("音源ロード失敗", "warn");
@@ -1874,6 +1979,53 @@ function roundRect(x, y, width, height, radius) {
   ctx.arcTo(x, y + height, x, y, r);
   ctx.arcTo(x, y, x + width, y, r);
   ctx.closePath();
+}
+
+function loadSoundAssignments() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("finger-drum-sound-map") || "null");
+    if (!Array.isArray(saved)) {
+      updateSoundStorageStatus(false);
+      return;
+    }
+    pads.forEach((pad, index) => {
+      applySoundPreset(pad, saved[index] || pad.defaultSoundId);
+    });
+    updateSoundStorageStatus(true);
+  } catch {
+    localStorage.removeItem("finger-drum-sound-map");
+    localStorage.removeItem("finger-drum-sound-map-saved-at");
+    resetPadSoundsToDefaults();
+    updateSoundStorageStatus(false);
+  }
+}
+
+function saveSoundAssignments() {
+  localStorage.setItem("finger-drum-sound-map", JSON.stringify(pads.map((pad) => pad.soundId)));
+  localStorage.setItem("finger-drum-sound-map-saved-at", new Date().toISOString());
+  updateSoundStorageStatus(true);
+}
+
+function resetSoundAssignments() {
+  resetPadSoundsToDefaults();
+  localStorage.removeItem("finger-drum-sound-map");
+  localStorage.removeItem("finger-drum-sound-map-saved-at");
+  syncSoundPresetControl();
+  updateSoundStorageStatus(false);
+  setJudge("音色を初期化", "neutral");
+}
+
+function resetPadSoundsToDefaults() {
+  pads.forEach((pad) => applySoundPreset(pad, pad.defaultSoundId));
+}
+
+function updateSoundStorageStatus(hasSavedMap) {
+  if (!els.soundStorageStatus) return;
+  if (!hasSavedMap) {
+    els.soundStorageStatus.textContent = "音色: GarageBand配置";
+    return;
+  }
+  els.soundStorageStatus.textContent = "音色: カスタム保存済み";
 }
 
 function loadAssignments() {

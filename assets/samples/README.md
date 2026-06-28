@@ -24,6 +24,10 @@ Source files used:
 - `elec_cymbal.flac`
 - `perc_impact1.flac`
 - `drum_bass_soft.flac`
+- `elec_tick.flac`
+- `elec_blip.flac`
+- `glitch_perc1.flac`
+- `glitch_perc2.flac`
 
 Custom generated prototype sounds:
 
