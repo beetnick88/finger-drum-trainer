@@ -19,6 +19,7 @@ Melodics風の4x4 MIDI PAD練習アプリのMVPです。
 - 見本ボタンで自動演奏を見ながら練習の流れを確認
 - 設定タブから曲を選択可能
 - 最後のノーツが流れ終わると自動でComplete表示になりゲーム終了
+- GarageBand SoCalと同じMIDI 36〜51の順でP01〜P16を配置
 
 ## 起動
 
@@ -38,6 +39,12 @@ SafariとiPad/iPhone版ChromeはWeb MIDIに対応していません。iPadでは
 右パネルの `設定` タブから `Learn` を押します。その後、画面上のPADをクリックしてから実機MIDIPADを押すと、その画面PADにMIDI Note番号を保存します。
 
 保存された割り当てはブラウザのlocalStorageに残ります。
+
+## GarageBand SoCal配置
+
+P01から順に、Kick、Side Stick、Snare、Clap、Electric Snare、Low Floor Tom、Closed Hat、High Floor Tom、Pedal Hat、Low Tom、Open Hat、Low-Mid Tom、High-Mid Tom、Crash、High Tom、Rideを割り当てています。
+
+実機PADのMIDIノートはP01=36からP16=51までの連番です。旧配置の保存データは初回起動時にGarageBand配置へ移行されます。
 
 ## 音源
 
