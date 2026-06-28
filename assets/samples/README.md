@@ -29,6 +29,10 @@ Source files used:
 - `glitch_perc1.flac`
 - `glitch_perc2.flac`
 
+User-provided sound:
+
+- `cymbal_crash_412547.mp3` (trimmed trailing silence, metadata removed)
+
 Custom generated prototype sounds:
 
 - `custom_rimshot.wav`
