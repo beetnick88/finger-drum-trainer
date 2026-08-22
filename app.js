@@ -91,6 +91,11 @@ const garageBandPadByMidi = new Map([
   [51, 15],
   [54, 6],
   [57, 13],
+  [59, 15],
+  [62, 6],
+  [70, 6],
+  [77, 15],
+  [84, 15],
 ]);
 
 const songs = [
@@ -108,6 +113,22 @@ const songs = [
     introBeats: 0,
     description: "読み込み中: 原曲MIDI伴奏 + ドラム専用MIDIをそのまま練習",
     sourceJson: "./assets/songs/kaiju-no-hanauta.json",
+    practiceKey: "full",
+  },
+  {
+    title: "ライラック Easy",
+    bpm: 150,
+    introBeats: 0,
+    description: "読み込み中: 原曲MIDI伴奏 + 叩きやすい5Padドラム",
+    sourceJson: "./assets/songs/lilac.json",
+    practiceKey: "easy",
+  },
+  {
+    title: "ライラック Full Drum",
+    bpm: 150,
+    introBeats: 0,
+    description: "読み込み中: 原曲MIDI伴奏 + ドラムチャンネルをそのまま練習",
+    sourceJson: "./assets/songs/lilac.json",
     practiceKey: "full",
   },
   {
