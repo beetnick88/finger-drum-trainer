@@ -4,10 +4,27 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Finger Drum Trainer</title>
-    <link rel="stylesheet" href="./styles.css?v=lilac-1" />
+    <link rel="stylesheet" href="./styles.css?v=protected-login-1" />
   </head>
   <body>
-    <main class="app-shell">
+    <section id="loginScreen" class="login-screen" aria-label="ログイン">
+      <div class="login-panel">
+        <p class="login-kicker">Finger Drum Trainer</p>
+        <h1>練習をはじめる</h1>
+        <p class="login-copy">ログインなしでは、著作権のないレッスン曲だけを表示します。</p>
+        <label class="login-field">
+          <span>パスワード</span>
+          <input id="privatePassword" type="password" autocomplete="current-password" placeholder="特定曲を使う場合のみ入力" />
+        </label>
+        <div class="login-actions">
+          <button id="privateLogin" type="button">ログイン</button>
+          <button id="guestLogin" type="button">ログインなしで入る</button>
+        </div>
+        <p id="loginStatus" class="login-status">ログインすると、暗号化された練習曲をこの端末内で復号します。</p>
+      </div>
+    </section>
+
+    <main id="appShell" class="app-shell" hidden>
       <section class="stage-panel" aria-label="演奏画面">
         <header class="topbar">
           <div>
@@ -134,6 +151,6 @@
       </aside>
     </main>
 
-    <script src="./app.js?v=lilac-1"></script>
+    <script src="./app.js?v=protected-login-1"></script>
   </body>
 </html>

@@ -98,39 +98,35 @@ const garageBandPadByMidi = new Map([
   [84, 15],
 ]);
 
-const songs = [
+const protectedSongPackUrl = "./assets/songs/protected-songs.enc.json";
+const protectedSongDefinitions = [
   {
-    title: "怪獣の花唄 Easy",
+    key: "song1",
     bpm: 150,
-    introBeats: 0,
-    description: "読み込み中: 原曲MIDI伴奏 + 叩きやすい4Padドラム",
-    sourceJson: "./assets/songs/kaiju-no-hanauta.json",
     practiceKey: "easy4",
+    modeLabel: "Easy",
   },
   {
-    title: "怪獣の花唄 Full Drum",
+    key: "song1",
     bpm: 150,
-    introBeats: 0,
-    description: "読み込み中: 原曲MIDI伴奏 + ドラム専用MIDIをそのまま練習",
-    sourceJson: "./assets/songs/kaiju-no-hanauta.json",
     practiceKey: "full",
+    modeLabel: "Full Drum",
   },
   {
-    title: "ライラック Easy",
+    key: "song2",
     bpm: 150,
-    introBeats: 0,
-    description: "読み込み中: 原曲MIDI伴奏 + 叩きやすい5Padドラム",
-    sourceJson: "./assets/songs/lilac.json",
     practiceKey: "easy",
+    modeLabel: "Easy",
   },
   {
-    title: "ライラック Full Drum",
+    key: "song2",
     bpm: 150,
-    introBeats: 0,
-    description: "読み込み中: 原曲MIDI伴奏 + ドラムチャンネルをそのまま練習",
-    sourceJson: "./assets/songs/lilac.json",
     practiceKey: "full",
+    modeLabel: "Full Drum",
   },
+];
+
+const publicSongs = [
   {
     title: "Lesson 01: Kick + Hat",
     bpm: 70,
@@ -165,7 +161,7 @@ const songs = [
     introBeats: 4,
     stepBeats: 0.5,
     cycles: 4,
-    description: "キックを少し増やして、怪獣の花唄に近い足の動きへ",
+    description: "キックを少し増やして、ポップス系8ビートに近い足の動きへ",
     steps: [
       [0, 6], [6], [6], [0, 6],
       [2, 6], [6], [0, 6], [6],
@@ -202,6 +198,7 @@ const songs = [
     ],
   },
 ];
+let songs = [...publicSongs];
 
 const musicLoopBeats = 16;
 const chordRoots = [48, 44, 41, 46];
@@ -219,6 +216,12 @@ const introMelody = [
 ];
 
 const els = {
+  loginScreen: document.getElementById("loginScreen"),
+  appShell: document.getElementById("appShell"),
+  privatePassword: document.getElementById("privatePassword"),
+  privateLogin: document.getElementById("privateLogin"),
+  guestLogin: document.getElementById("guestLogin"),
+  loginStatus: document.getElementById("loginStatus"),
   canvas: document.getElementById("noteCanvas"),
   padGrid: document.getElementById("padGrid"),
   padTab: document.getElementById("padTab"),
@@ -294,12 +297,14 @@ const state = {
   demoMode: false,
   demoTimer: null,
   demoStep: 0,
+  privateSongsUnlocked: false,
   hitEffects: [],
   judgePopups: [],
   lastTs: performance.now(),
 };
 
 function init() {
+  setupLogin();
   loadAssignments();
   loadSoundAssignments();
   loadMixSettings();
@@ -351,6 +356,60 @@ function init() {
   els.resetSounds.addEventListener("click", resetSoundAssignments);
 }
 
+function setupLogin() {
+  els.guestLogin.addEventListener("click", () => enterApp(false));
+  els.privateLogin.addEventListener("click", unlockPrivateSongs);
+  els.privatePassword.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") unlockPrivateSongs();
+  });
+}
+
+function enterApp(privateSongsUnlocked) {
+  state.privateSongsUnlocked = privateSongsUnlocked;
+  els.loginScreen.hidden = true;
+  els.appShell.hidden = false;
+  if (!privateSongsUnlocked) {
+    songs = [...publicSongs];
+    state.songIndex = 0;
+    renderSongOptions();
+    selectSong(0);
+  }
+  resizeCanvas();
+}
+
+async function unlockPrivateSongs() {
+  const password = els.privatePassword.value;
+  if (!password) {
+    setLoginStatus("パスワードを入力してください。", "error");
+    return;
+  }
+
+  els.privateLogin.disabled = true;
+  els.guestLogin.disabled = true;
+  setLoginStatus("曲データを復号しています...", "neutral");
+  try {
+    const pack = await decryptProtectedSongPack(password);
+    songs = buildUnlockedSongs(pack);
+    els.privatePassword.value = "";
+    setLoginStatus("ログインしました。", "ok");
+    renderSongOptions();
+    enterApp(true);
+    selectSong(0);
+  } catch (error) {
+    songs = [...publicSongs];
+    setLoginStatus("パスワードが違うか、曲データを復号できませんでした。", "error");
+  } finally {
+    els.privateLogin.disabled = false;
+    els.guestLogin.disabled = false;
+  }
+}
+
+function setLoginStatus(message, tone) {
+  els.loginStatus.textContent = message;
+  els.loginStatus.classList.toggle("is-error", tone === "error");
+  els.loginStatus.classList.toggle("is-ok", tone === "ok");
+}
+
 function currentSong() {
   return songs[state.songIndex] || songs[0];
 }
@@ -393,6 +452,64 @@ async function loadMidiSongs() {
       ? `原曲MIDI伴奏 / Full Drum ${drumEvents.length} notes / ドラム音はPADだけ`
       : `原曲MIDI伴奏 / Easy ${drumEvents.length} notes / ドラム音はPADだけ`;
   }));
+}
+
+async function decryptProtectedSongPack(password) {
+  const response = await fetch(protectedSongPackUrl, { cache: "no-store" });
+  if (!response.ok) throw new Error("protected song pack unavailable");
+  const encrypted = await response.json();
+  const salt = base64ToBytes(encrypted.salt);
+  const iv = base64ToBytes(encrypted.iv);
+  const ciphertext = base64ToBytes(encrypted.ciphertext);
+  const passwordKey = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(password),
+    "PBKDF2",
+    false,
+    ["deriveKey"],
+  );
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: encrypted.iterations, hash: "SHA-256" },
+    passwordKey,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"],
+  );
+  const plaintext = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertext);
+  return JSON.parse(new TextDecoder().decode(plaintext));
+}
+
+function base64ToBytes(value) {
+  const binary = atob(value);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
+function buildUnlockedSongs(pack) {
+  const songDataByKey = pack.songs || {};
+  const unlockedSongs = protectedSongDefinitions.map((definition) => {
+    const data = songDataByKey[definition.key];
+    if (!data) throw new Error(`missing protected song: ${definition.key}`);
+    const drumEvents = (data.practice?.[definition.practiceKey] || []).map((event) => ({
+      ...event,
+      padIndex: garageBandPadByMidi.get(event.midi) ?? event.padIndex,
+    }));
+    return {
+      title: `${data.title || "Protected Song"} ${definition.modeLabel}`,
+      bpm: data.bpm || definition.bpm,
+      introBeats: 0,
+      description: `ログイン曲 / ${definition.modeLabel} ${drumEvents.length} notes / ドラム音はPADだけ`,
+      practiceKey: definition.practiceKey,
+      loaded: true,
+      durationBeats: data.durationBeats || 0,
+      drumEvents,
+      backingEvents: data.backing || [],
+      firstPracticeBeat: drumEvents.length ? drumEvents[0].beat : 0,
+      protected: true,
+    };
+  });
+  return [...unlockedSongs, ...publicSongs];
 }
 
 function selectSong(index) {
@@ -1025,6 +1142,7 @@ function updateLearnTarget() {
 }
 
 function onKeyDown(event) {
+  if (els.appShell.hidden || isFormControl(event.target)) return;
   if (event.repeat) return;
   if (event.code === "Space") {
     event.preventDefault();
@@ -1034,6 +1152,11 @@ function onKeyDown(event) {
   const key = event.key.toLowerCase();
   const pad = pads.find((item) => item.key === key);
   if (pad) triggerPad(pad.index, performance.now(), "keyboard");
+}
+
+function isFormControl(target) {
+  if (!(target instanceof HTMLElement)) return false;
+  return target.isContentEditable || ["BUTTON", "INPUT", "SELECT", "TEXTAREA"].includes(target.tagName);
 }
 
 function triggerPad(padIndex, now, source) {

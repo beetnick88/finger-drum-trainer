@@ -52,6 +52,79 @@ button.active {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.16) inset;
 }
 
+[hidden] {
+  display: none !important;
+}
+
+.login-screen {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 1.2rem;
+}
+
+.login-panel {
+  display: grid;
+  width: min(100%, 28rem);
+  gap: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(13, 17, 26, 0.92);
+  padding: 1.4rem;
+  box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.35);
+}
+
+.login-kicker {
+  color: #68e389;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.login-copy,
+.login-status {
+  line-height: 1.5;
+}
+
+.login-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.login-field span {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 800;
+}
+
+.login-field input {
+  min-height: 3rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #070a11;
+  color: var(--text);
+  padding: 0 0.8rem;
+  outline: none;
+}
+
+.login-field input:focus {
+  border-color: rgba(104, 227, 137, 0.72);
+  box-shadow: 0 0 0 3px rgba(104, 227, 137, 0.14);
+}
+
+.login-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.login-status.is-error {
+  color: var(--bad);
+}
+
+.login-status.is-ok {
+  color: var(--good);
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(22rem, 30rem);
